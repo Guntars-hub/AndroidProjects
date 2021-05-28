@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         setUpRecyclerView()
 
         searchButton.setOnClickListener {
-            makeAPIRequest()
             hideKeyboard()
         }
 
