@@ -3,4 +3,6 @@
     <string name="app_label">GifRetroGlideApp</string>
     <string name="search_hint">type to search...</string>
     <string name="search">Search for gifs...</string>
+    <string name="search_gifs_hint">Type hear to search gifs...</string>
+    <string name="gifContentDescription">gifImage</string>
 </resources>

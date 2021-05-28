@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#292929"
     tools:context=".MainActivity">
 
-    <SearchView
-        android:id="@+id/simpleSearchView"
-        android:layout_width="match_parent"
+
+    <ImageButton
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="@color/white"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/search_icon"
+        android:layout_marginTop="@dimen/searchButtonMargin" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/editText_height"
+        android:layout_marginTop="@dimen/editTextMargin"
+        android:layout_marginBottom="@dimen/editTextMargin"
+        android:layout_toStartOf="@id/searchButton"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:inputType="text"
+        android:layout_marginLeft="@dimen/editTextMargin"
+        android:textAlignment="center"
+        android:hint="@string/search_gifs_hint"
+        android:imeOptions="actionGo"
         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/editText"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         tools:itemCount="17"
@@ -32,11 +49,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="3"
         android:layout_marginTop="10dp"
-        android:textStyle="italic"
+        android:text="3"
         android:textColor="@android:color/white"
-        android:visibility="gone"/>
+        android:textStyle="italic"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

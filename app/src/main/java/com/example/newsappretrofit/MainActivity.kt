@@ -1,10 +1,16 @@
-    package com.example.newsappretrofit
+package com.example.newsappretrofit
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import android.widget.SearchView
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsappretrofit.adapters.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
 
 const val BASE_URL = "https://api.giphy.com"
 
@@ -23,46 +28,79 @@ class MainActivity : AppCompatActivity() {
     lateinit var countDownTimer: CountDownTimer
 
     private var imagesList = mutableListOf<String>()
+    private var adapter = RecyclerAdapter(imagesList)
+    private val api = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(ApiRequest::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        makeAPIRequest()
+        setUpRecyclerView()
+
+        searchButton.setOnClickListener {
+            makeAPIRequest()
+            hideKeyboard()
+        }
+
+//        TODO automatically hide keyboard - DONE
+
+//        TODO single line in editText - DONE
+
+//        TODO implement - DONE
+
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                hideKeyboard()
+            }
+            true
+        }
+
+        editText.addTextChangedListener { _ ->
+            makeAPIRequest()
+        }
+    }
+
+    private fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager =
+            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun setUpRecyclerView() {
         rv_recyclerView.layoutManager = LinearLayoutManager(applicationContext)
-        rv_recyclerView.adapter = RecyclerAdapter(imagesList)
-    }
-
-    private fun addToList(image: String) {
-        imagesList.add(image)
+        rv_recyclerView.adapter = adapter
     }
 
     private fun makeAPIRequest() {
-
-        val api = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiRequest::class.java)
-
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val simpleSearchView = findViewById<SearchView>(R.id.simpleSearchView); // inititate a search view
-                var query = simpleSearchView.query; // get the query string currently in the text field
-                val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", "android", "25")
+                val query = editText.text.toString()
+                if (query.isNotEmpty() && query.length > 2) {
 
-                for (gifUrl in response.data) {
-                    Log.i("MainActivity", "Result = $gifUrl")
-                    addToList(gifUrl.images.downsized.url)
+                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "25")
+
+                    imagesList.clear()
+                    for (gifUrl in response.data) {
+                        Log.i("MainActivity", "Result = $gifUrl")
+                        imagesList.add(gifUrl.images.downsized.url)
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        adapter.notifyDataSetChanged()
+                    }
                 }
-
-                withContext(Dispatchers.Main) {
-                    setUpRecyclerView()
-                }
-
             } catch (e: Exception) {
                 Log.e("MainActivity", e.toString())
             }
