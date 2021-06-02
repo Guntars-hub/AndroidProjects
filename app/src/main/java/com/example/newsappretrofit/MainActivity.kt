@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -11,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsappretrofit.adapters.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
 
 const val BASE_URL = "https://api.giphy.com"
 
@@ -63,10 +66,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun Fragment.hideKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
-    }
-
     private fun Activity.hideKeyboard() {
         hideKeyboard(currentFocus ?: View(this))
     }
@@ -78,7 +77,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView() {
-        rv_recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        val gridLayoutManager =
+            GridLayoutManager(applicationContext, 3, LinearLayoutManager.VERTICAL, false)
+        rv_recyclerView.layoutManager = gridLayoutManager
         rv_recyclerView.adapter = adapter
     }
 
@@ -88,12 +89,12 @@ class MainActivity : AppCompatActivity() {
                 val query = editText.text.toString()
                 if (query.isNotEmpty() && query.length > 2) {
 
-                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "25")
+                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "10")
 
                     imagesList.clear()
                     for (gifUrl in response.data) {
                         Log.i("MainActivity", "Result = $gifUrl")
-                        imagesList.add(gifUrl.images.downsized.url)
+                        imagesList.add(gifUrl.images.original.url)
                     }
 
                     withContext(Dispatchers.Main) {

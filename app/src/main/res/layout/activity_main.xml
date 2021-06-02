@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:src="@drawable/search_icon"
-        android:layout_marginTop="@dimen/searchButtonMargin" />
+        android:layout_marginTop="@dimen/searchButtonMargin"
+        android:layout_marginEnd="@dimen/editTextMargin"/>
 
     <EditText
         android:id="@+id/editText"
@@ -26,7 +27,7 @@
         android:textSize="20sp"
         android:maxLines="1"
         android:inputType="text"
-        android:layout_marginLeft="@dimen/editTextMargin"
+        android:layout_marginStart="@dimen/editTextMargin"
         android:textAlignment="center"
         android:hint="@string/search_gifs_hint"
         android:imeOptions="actionGo"
@@ -34,8 +35,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/editText"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="4dp"
