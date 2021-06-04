@@ -6,6 +6,15 @@
     android:background="#292929"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/giphyLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/giphy_logo_foreground"
+        android:translationZ="1dp"
+        android:layout_marginStart="20dp"
+        />
+
 
     <ImageButton
         android:id="@+id/searchButton"
@@ -13,18 +22,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:src="@drawable/search_icon"
-        android:layout_marginTop="@dimen/searchButtonMargin"
-        android:layout_marginEnd="@dimen/editTextMargin"/>
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="@dimen/editTextMargin"
+        android:visibility="invisible"/>
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="match_parent"
+        android:layout_width="225dp"
         android:layout_height="@dimen/editText_height"
-        android:layout_marginTop="@dimen/editTextMargin"
+        android:layout_marginTop="38dp"
         android:layout_marginBottom="@dimen/editTextMargin"
+        android:layout_marginLeft="420dp"
         android:layout_toStartOf="@id/searchButton"
-        android:background="@drawable/rounded_edittext"
-        android:textSize="20sp"
+        android:background="@color/white"
+        android:textSize="16sp"
         android:maxLines="1"
         android:inputType="text"
         android:layout_marginStart="@dimen/editTextMargin"
@@ -35,9 +46,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/giphyLogo"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"

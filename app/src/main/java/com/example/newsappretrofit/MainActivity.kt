@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 val query = editText.text.toString()
                 if (query.isNotEmpty() && query.length > 2) {
 
-                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "10")
+                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "15")
 
                     imagesList.clear()
                     for (gifUrl in response.data) {
