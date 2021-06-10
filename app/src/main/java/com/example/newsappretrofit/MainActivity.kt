@@ -22,6 +22,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 const val BASE_URL = "https://api.giphy.com"
@@ -29,6 +31,7 @@ const val BASE_URL = "https://api.giphy.com"
 class MainActivity : AppCompatActivity() {
 
     lateinit var countDownTimer: CountDownTimer
+    private val timer = Timer("SettingUp", false)
 
     private var imagesList = mutableListOf<String>()
     private var adapter = RecyclerAdapter(imagesList)
@@ -48,6 +51,12 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard()
         }
 
+        deleteButton.setOnClickListener {
+                imagesList.clear()
+                adapter.notifyDataSetChanged()
+                editText.text.clear()
+        }
+
 //        TODO automatically hide keyboard - DONE
 
 //        TODO single line in editText - DONE
@@ -62,7 +71,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         editText.addTextChangedListener { _ ->
-            makeAPIRequest()
+            //Timer("SettingUp", false) {
+               //timer.schedule(700) {
+                   makeAPIRequest()
+               //}
+            //}
+           // makeAPIRequest()
         }
     }
 
@@ -89,17 +103,19 @@ class MainActivity : AppCompatActivity() {
                 val query = editText.text.toString()
                 if (query.isNotEmpty() && query.length > 2) {
 
-                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "15")
-
-                    imagesList.clear()
-                    for (gifUrl in response.data) {
-                        Log.i("MainActivity", "Result = $gifUrl")
-                        imagesList.add(gifUrl.images.original.url)
-                    }
+                    val response = api.getGifs("b3yanGY4AmT3AtBM2KeYY25UfSByTv41", query, "25")
 
                     withContext(Dispatchers.Main) {
+                        imagesList.clear()
+                        for (gifUrl in response.data) {
+                            Log.i("MainActivity", "Result = $gifUrl")
+                            imagesList.add(gifUrl.images.original.url)
+                        }
                         adapter.notifyDataSetChanged()
                     }
+                } else if (query.isEmpty()) {
+                        imagesList.clear()
+                        adapter.notifyDataSetChanged()
                 }
             } catch (e: Exception) {
                 Log.e("MainActivity", e.toString())
